@@ -1,0 +1,17 @@
+{
+	"name": "serverlesSQL_kevee_sa",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"parameters": {
+			"DBName": {
+				"type": "String"
+			}
+		},
+		"annotations": [],
+		"type": "AzureSqlDatabase",
+		"typeProperties": {
+			"connectionString": "integrated security=False;encrypt=True;connection timeout=30;data source=kevee-bim-revit-sa-ondemand.sql.azuresynapse.net;initial catalog=@{linkedService().DBName};user id=sqladminuser",
+			"encryptedCredential": "ew0KICAiVmVyc2lvbiI6ICIyMDE3LTExLTMwIiwNCiAgIlByb3RlY3Rpb25Nb2RlIjogIktleSIsDQogICJTZWNyZXRDb250ZW50VHlwZSI6ICJQbGFpbnRleHQiLA0KICAiQ3JlZGVudGlhbElkIjogIkRBVEFGQUNUT1JZQEFDNzg4MEU0LTAyQjYtNEFEOS04QzZDLThGMjg3QTAyNUFERF8wNGUyMDY5My05ZDkxLTRmNTYtYmU1MS1kYzI1YzcyNmUwNTMiDQp9"
+		}
+	}
+}

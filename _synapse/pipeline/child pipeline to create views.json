@@ -1,0 +1,122 @@
+{
+	"name": "child pipeline to create views",
+	"properties": {
+		"activities": [
+			{
+				"name": "Get Tablenames",
+				"type": "GetMetadata",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataset": {
+						"referenceName": "goldTables",
+						"type": "DatasetReference",
+						"parameters": {
+							"project_name": {
+								"value": "@pipeline().parameters.p_project_name",
+								"type": "Expression"
+							}
+						}
+					},
+					"fieldList": [
+						"childItems"
+					],
+					"storeSettings": {
+						"type": "AzureBlobFSReadSettings",
+						"recursive": true,
+						"enablePartitionDiscovery": false
+					},
+					"formatSettings": {
+						"type": "BinaryReadSettings"
+					}
+				}
+			},
+			{
+				"name": "ForEach1",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "Get Tablenames",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Get Tablenames').output.childItems",
+						"type": "Expression"
+					},
+					"activities": [
+						{
+							"name": "create views",
+							"type": "SqlServerStoredProcedure",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"storedProcedureName": "[dbo].[CreatesQLserverlessView_gold]",
+								"storedProcedureParameters": {
+									"DatabaseName": {
+										"value": {
+											"value": "@pipeline().parameters.p_project_name",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"ViewName": {
+										"value": {
+											"value": "@item().name",
+											"type": "Expression"
+										},
+										"type": "String"
+									}
+								}
+							},
+							"linkedServiceName": {
+								"referenceName": "serverlessSQL_kevee",
+								"type": "LinkedServiceReference",
+								"parameters": {
+									"DBName": {
+										"value": "@pipeline().parameters.p_project_name",
+										"type": "Expression"
+									}
+								}
+							}
+						}
+					]
+				}
+			}
+		],
+		"parameters": {
+			"p_project_name": {
+				"type": "string"
+			}
+		},
+		"variables": {
+			"Project_Name": {
+				"type": "String"
+			},
+			"View_Name": {
+				"type": "String"
+			}
+		},
+		"annotations": [],
+		"lastPublishTime": "2024-03-08T08:44:47Z"
+	},
+	"type": "Microsoft.Synapse/workspaces/pipelines"
+}

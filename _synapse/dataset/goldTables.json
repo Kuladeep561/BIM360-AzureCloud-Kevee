@@ -1,0 +1,26 @@
+{
+	"name": "goldTables",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "kevee-bim-revit-sa-WorkspaceDefaultStorage",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"project_name": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "Binary",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileSystem": {
+					"value": "@concat('gold/',dataset().project_name)",
+					"type": "Expression"
+				}
+			}
+		}
+	},
+	"type": "Microsoft.Synapse/workspaces/datasets"
+}

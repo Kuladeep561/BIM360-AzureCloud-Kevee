@@ -1,0 +1,174 @@
+{
+	"name": "kevee-Revit-PowerBI",
+	"properties": {
+		"activities": [
+			{
+				"name": "Loadingdata",
+				"type": "DatabricksNotebook",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"notebookPath": "/Users/kuladeep127@gmail.com/2_Loadingdata",
+					"baseParameters": {
+						"p_project_id": {
+							"value": "@pipeline().parameters.p_project_id",
+							"type": "Expression"
+						},
+						"p_folder_id": {
+							"value": "@pipeline().parameters.p_folder_id",
+							"type": "Expression"
+						},
+						"p_model_name": {
+							"value": "@pipeline().parameters.p_model_name",
+							"type": "Expression"
+						},
+						"p_view_name": {
+							"value": "@pipeline().parameters.p_view_name",
+							"type": "Expression"
+						},
+						"p_project_name": {
+							"value": "@pipeline().parameters.p_project_name",
+							"type": "Expression"
+						}
+					}
+				},
+				"linkedServiceName": {
+					"referenceName": "AzureDatabricks_kevee",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "Bronze to Silver",
+				"type": "DatabricksNotebook",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
+				"dependsOn": [
+					{
+						"activity": "Loadingdata",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"notebookPath": "/Users/kuladeep127@gmail.com/3_Bronze to Silver",
+					"baseParameters": {
+						"p_project_name": {
+							"value": "@pipeline().parameters.p_project_name",
+							"type": "Expression"
+						}
+					}
+				},
+				"linkedServiceName": {
+					"referenceName": "AzureDatabricks_kevee",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "Silver to Gold",
+				"type": "DatabricksNotebook",
+				"state": "Inactive",
+				"onInactiveMarkAs": "Succeeded",
+				"dependsOn": [
+					{
+						"activity": "Bronze to Silver",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"notebookPath": "/Users/kuladeep127@gmail.com/4_Silver to Gold",
+					"baseParameters": {
+						"p_project_name": {
+							"value": "@pipeline().parameters.p_project_name",
+							"type": "Expression"
+						}
+					}
+				},
+				"linkedServiceName": {
+					"referenceName": "AzureDatabricks_kevee",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "list of DBs",
+				"type": "Script",
+				"dependsOn": [
+					{
+						"activity": "Silver to Gold",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"linkedServiceName": {
+					"referenceName": "AzureSynapseAnalytics_Kevee",
+					"type": "LinkedServiceReference"
+				},
+				"typeProperties": {
+					"scripts": [
+						{
+							"type": "Query",
+							"text": "SELECT name, database_id, create_date  \nFROM sys.databases"
+						}
+					],
+					"scriptBlockExecutionTimeout": "02:00:00"
+				}
+			}
+		],
+		"parameters": {
+			"p_project_id": {
+				"type": "string"
+			},
+			"p_folder_id": {
+				"type": "string"
+			},
+			"p_model_name": {
+				"type": "string"
+			},
+			"p_view_name": {
+				"type": "string"
+			},
+			"p_project_name": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"lastPublishTime": "2024-02-27T10:26:18Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

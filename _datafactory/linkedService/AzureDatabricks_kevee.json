@@ -1,0 +1,21 @@
+{
+	"name": "AzureDatabricks_kevee",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "AzureDatabricks",
+		"typeProperties": {
+			"domain": "https://adb-7604844659077757.17.azuredatabricks.net",
+			"accessToken": {
+				"type": "AzureKeyVaultSecret",
+				"store": {
+					"referenceName": "sqlauth",
+					"type": "LinkedServiceReference"
+				},
+				"secretName": "kkdlearning-databricks-accesstoken",
+				"secretVersion": "c583f9e886d74d448a22d5683d24af09"
+			},
+			"existingClusterId": "1130-132726-ywpht01m"
+		}
+	}
+}

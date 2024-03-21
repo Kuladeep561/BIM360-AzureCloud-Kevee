@@ -1,0 +1,17 @@
+{
+	"name": "CreatesQLserverlessView_gold",
+	"properties": {
+		"content": {
+			"query": "CREATE OR ALTER PROC CreatesQLserverlessView_gold \n    @DatabaseName VARCHAR(100),\n    @ViewName VARCHAR(100)\nAS\nBEGIN\n    DECLARE @statement NVARCHAR(MAX)\n\n    -- Switch the database context\n    SET @statement = N'USE ' + @DatabaseName + ';'\n    EXEC (@statement)\n\n    -- Create or alter the view\n    SET @statement = N'CREATE OR ALTER VIEW ' + @ViewName + N' AS\n    SELECT *\n    FROM OPENROWSET (\n        BULK ''https://keveebimdata.dfs.core.windows.net/gold/' + @DatabaseName + N'/' + @ViewName + '/'',\n        FORMAT = ''DELTA''\n    ) AS [result]'\n    \n    EXEC (@statement)\nEND\n",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "metadatabase",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

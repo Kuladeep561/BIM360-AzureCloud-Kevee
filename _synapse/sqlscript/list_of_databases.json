@@ -1,0 +1,17 @@
+{
+	"name": "list_of_databases",
+	"properties": {
+		"content": {
+			"query": "CREATE OR ALTER VIEW list_of_databases\nAS\nSELECT name\nFROM sys.databases",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "metadatabase",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

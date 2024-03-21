@@ -1,0 +1,9 @@
+{
+	"name": "kkd-learning-ADF",
+	"location": "uksouth",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "a9c9c7a8-bfbe-4fb6-a0a1-5c17cf403eb6",
+		"tenantId": "151941f9-6512-4c6e-8de3-2e74a78537f4"
+	}
+}
